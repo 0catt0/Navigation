@@ -1,5 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.CubicCurve2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +23,37 @@ class MapPanel extends JPanel {
     // Mudang 경로 포함 여부
     private boolean includeMudangPaths = false;
     
+    //지도 이미지
+    private Image backgroundImage;
+    
+    //줌 드래그 
+    private double zoomLevel = 1.0; // 줌 레벨
+    private double offsetX = 0;    // 드래그 시 X축 이동
+    private double offsetY = 0;    // 드래그 시 Y축 이동
+    private Point lastDragPoint;  // 드래그 시작 지점
+    
+    // 줌 레벨 제한
+    private static final double MIN_ZOOM = 0.5;
+    private static final double MAX_ZOOM = 3.0;
+    
+    
     public MapPanel(List<Node> nodes, List<Edge> edges, List<Mudang> mudangs, List<Object> shortestPath) {
         this.nodes = nodes;
         this.edges = edges;
         this.mudangs = mudangs;
         this.shortestPath = new ArrayList<>();
         this.highlightedNodes = new ArrayList<>();
+        
+        // 지도 이미지 로드
+        ImageIcon icon = new ImageIcon("navigation-main/map.png"); // 지도 이미지 경로
+        backgroundImage = icon.getImage();
+        
+        // 마우스 이벤트 등록
+        addMouseWheelListener(new ZoomHandler());
+        addMouseListener(new DragStartHandler());
+        addMouseMotionListener(new DragHandler());
     }
+    
     // 최단 경로 설정 메서드
     public void setShortestPath(List<PathSegment> path) {
         this.shortestPath = path;
@@ -56,17 +86,96 @@ class MapPanel extends JPanel {
         setShortestPath(path);
     }
     
+    // 줌 이벤트 처리
+    private class ZoomHandler implements MouseWheelListener {
+        @Override
+        public void mouseWheelMoved(MouseWheelEvent e) {
+            // 기존 줌 레벨 저장
+            double oldZoomLevel = zoomLevel;
+
+            // 줌 레벨 업데이트
+            double delta = 0.1; // 줌 변화량
+            if (e.getWheelRotation() < 0) {
+                zoomLevel = Math.min(zoomLevel + delta, MAX_ZOOM); // 줌 인
+            } else {
+                zoomLevel = Math.max(zoomLevel - delta, MIN_ZOOM); // 줌 아웃
+            }
+
+            // 줌 중심점 조정
+            double zoomFactor = zoomLevel / oldZoomLevel;
+            Point mousePoint = e.getPoint();
+            offsetX = zoomFactor * (offsetX - mousePoint.x) + mousePoint.x;
+            offsetY = zoomFactor * (offsetY - mousePoint.y) + mousePoint.y;
+
+            repaint();
+        }
+    }
+
+    // 드래그 시작 이벤트 처리
+    private class DragStartHandler extends MouseAdapter {
+        @Override
+        public void mousePressed(MouseEvent e) {
+            lastDragPoint = e.getPoint(); // 드래그 시작 위치 저장
+        }
+    }
+
+    // 드래그 이벤트 처리
+    private class DragHandler extends MouseMotionAdapter {
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            if (lastDragPoint != null) {
+                // 이동 거리 계산
+                int dx = e.getX() - lastDragPoint.x;
+                int dy = e.getY() - lastDragPoint.y;
+
+                // 이동 거리만큼 오프셋 업데이트
+                offsetX += dx;
+                offsetY += dy;
+
+                // 현재 드래그 위치 저장
+                lastDragPoint = e.getPoint();
+
+                repaint();
+            }
+        }
+    }
+
+    // 줌 초기화 메서드
+    public void resetZoomAndPosition() {
+        zoomLevel = 1.0;
+        offsetX = 0;
+        offsetY = 0;
+        repaint();
+    }
+
+    
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        
+        // 고화질 렌더링 설정
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
+        // AffineTransform을 사용해 줌 및 드래그 적용
+        AffineTransform transform = new AffineTransform();
+        transform.translate(offsetX, offsetY);       // 드래그 이동
+        transform.scale(zoomLevel, zoomLevel);       // 줌
+
+        
         // 배경색 그라데이션 추가
         GradientPaint gradient = new GradientPaint(0, 0, Color.LIGHT_GRAY, getWidth(), getHeight(), Color.WHITE);
         g2.setPaint(gradient);
         g2.fillRect(0, 0, getWidth(), getHeight());
-
+        
+        // 변환 적용 후 이미지 그리기
+        g2.setTransform(transform);
+        if (backgroundImage != null) {
+            g2.drawImage(backgroundImage, 0, 0, this);
+        }
+        
         // 학교 영역을 파란색으로 칠하기
         g2.setColor(new Color(173, 216, 230, 150)); // 반투명한 파란색
         int[] xPoints = {30, 40, 400, 470, 480, 700, 880, 870, 410, 150}; // X 좌표
@@ -151,4 +260,5 @@ class MapPanel extends JPanel {
         }
         
     }
+    
 }

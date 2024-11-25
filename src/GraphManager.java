@@ -14,22 +14,39 @@ public class GraphManager {
 
     // 초기 데이터 설정
     public void initializeData() {
-        nodes.add(new Node("정문", 700, 720));  // 0
-        nodes.add(new Node("비타", 780, 670));  // 1
-        nodes.add(new Node("공대2", 850, 590));  // 2
-        nodes.add(new Node("반단대", 620, 670));  // 3
-        nodes.add(new Node("글센", 550, 670));  // 4
-        nodes.add(new Node("전정도", 660, 590));  // 5
-        nodes.add(new Node("예체대", 520, 500));  // 6
-        nodes.add(new Node("가천관", 680, 450));  // 7
-        nodes.add(new Node("산협", 800, 470));  // 8
-        nodes.add(new Node("교대", 550, 280));  // 9
-        nodes.add(new Node("중도", 470, 220));  // 10
-        nodes.add(new Node("학생회관", 400, 180));  // 11
-        nodes.add(new Node("에공", 190, 200));  // 12
-        nodes.add(new Node("3긱", 100, 250));  // 13
-        nodes.add(new Node("1,2긱", 50, 140));  // 14
-        nodes.add(new Node("운동장", 150, 100));  // 15
+        nodes.add(new Node("정문", 118, 1976));  // 0
+        nodes.add(new Node("비타", 77, 2224));  // 1
+        nodes.add(new Node("공대2", 423, 2339));  // 2
+        nodes.add(new Node("반단대", 91, 1840));  // 3
+        nodes.add(new Node("글센", 76, 1553));  // 4
+        nodes.add(new Node("전정도", 431, 1933));  // 5
+        nodes.add(new Node("예체대", 554, 1536));  // 6
+        nodes.add(new Node("가천관", 685, 2021));  // 7
+        nodes.add(new Node("산협", 622, 2301));  // 8
+        nodes.add(new Node("교대", 1176, 1564));  // 9
+        nodes.add(new Node("중도", 1496, 1376));  // 10
+        nodes.add(new Node("학생회관", 1816, 1137));  // 11
+        nodes.add(new Node("에공", 1744, 517));  // 12
+        nodes.add(new Node("3긱", 1584, 389));  // 13
+        nodes.add(new Node("1,2긱", 1915, 294));  // 14
+        nodes.add(new Node("운동장", 1970, 500));  // 15
+        
+//        nodes.add(new Node("정문", 700, 720));  // 0
+//        nodes.add(new Node("비타", 780, 670));  // 1
+//        nodes.add(new Node("공대2", 850, 590));  // 2
+//        nodes.add(new Node("반단대", 620, 670));  // 3
+//        nodes.add(new Node("글센", 550, 670));  // 4
+//        nodes.add(new Node("전정도", 660, 590));  // 5
+//        nodes.add(new Node("예체대", 520, 500));  // 6
+//        nodes.add(new Node("가천관", 680, 450));  // 7
+//        nodes.add(new Node("산협", 800, 470));  // 8
+//        nodes.add(new Node("교대", 550, 280));  // 9
+//        nodes.add(new Node("중도", 470, 220));  // 10
+//        nodes.add(new Node("학생회관", 400, 180));  // 11
+//        nodes.add(new Node("에공", 190, 200));  // 12
+//        nodes.add(new Node("3긱", 100, 250));  // 13
+//        nodes.add(new Node("1,2긱", 50, 140));  // 14
+//        nodes.add(new Node("운동장", 150, 100));  // 15
 
         // 엣지 생성
         edges.add(new Edge(nodes.get(0), nodes.get(1), 1));
