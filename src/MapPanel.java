@@ -49,7 +49,7 @@ class MapPanel extends JPanel {
         this.highlightedNodes = new ArrayList<>();
         
         // 지도 이미지 로드
-        ImageIcon icon = new ImageIcon("navigation-main/map.png"); // 지도 이미지 경로
+        ImageIcon icon = new ImageIcon("map.png"); // 지도 이미지 경로
         backgroundImage = icon.getImage();
         
         setInitialPosition(55, -1510); //창 실행시 뷰포트 위치 설정
@@ -161,7 +161,7 @@ class MapPanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        System.out.println("Current Offset: X = " + offsetX + ", Y = " + offsetY);
+//        System.out.println("Current Offset: X = " + offsetX + ", Y = " + offsetY);
 
         // 고화질 렌더링 설정
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);

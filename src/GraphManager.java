@@ -79,7 +79,7 @@ public class GraphManager {
 
         // 무당 경로 생성
         mudang.add(new Mudang(nodes.get(3), nodes.get(9), 1));
-        mudang.add(new Mudang(nodes.get(10), nodes.get(11), 1));
+        mudang.add(new Mudang(nodes.get(9), nodes.get(11), 1));
         mudang.add(new Mudang(nodes.get(11), nodes.get(15), 1));
     }
 
