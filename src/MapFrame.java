@@ -9,7 +9,7 @@ public class MapFrame extends JFrame {
     private final MapPanel mapPanel;
 
     public MapFrame(List<Node> nodes, List<Edge> edges, List<Mudang> mudang) {
-        setTitle("Campus Map with Highlighted Area");
+        setTitle("Campus Map");
         setSize(1000, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);

@@ -33,9 +33,13 @@ class MapPanel extends JPanel {
     private Point lastDragPoint;  // 드래그 시작 지점
     
     // 줌 레벨 제한
-    private static final double MIN_ZOOM = 0.5;
+    private static final double MIN_ZOOM = 0.6;
     private static final double MAX_ZOOM = 3.0;
     
+    private void setInitialPosition(int x, int y) {
+        offsetX = x;
+        offsetY = y;
+    }
     
     public MapPanel(List<Node> nodes, List<Edge> edges, List<Mudang> mudangs, List<Object> shortestPath) {
         this.nodes = nodes;
@@ -47,6 +51,9 @@ class MapPanel extends JPanel {
         // 지도 이미지 로드
         ImageIcon icon = new ImageIcon("navigation-main/map.png"); // 지도 이미지 경로
         backgroundImage = icon.getImage();
+        
+        setInitialPosition(55, -1510); //창 실행시 뷰포트 위치 설정
+        
         
         // 마우스 이벤트 등록
         addMouseWheelListener(new ZoomHandler());
@@ -154,7 +161,8 @@ class MapPanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        
+        System.out.println("Current Offset: X = " + offsetX + ", Y = " + offsetY);
+
         // 고화질 렌더링 설정
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
@@ -165,22 +173,22 @@ class MapPanel extends JPanel {
         transform.scale(zoomLevel, zoomLevel);       // 줌
 
         
-        // 배경색 그라데이션 추가
-        GradientPaint gradient = new GradientPaint(0, 0, Color.LIGHT_GRAY, getWidth(), getHeight(), Color.WHITE);
-        g2.setPaint(gradient);
-        g2.fillRect(0, 0, getWidth(), getHeight());
-        
+//        // 배경색 그라데이션 추가
+//        GradientPaint gradient = new GradientPaint(0, 0, Color.LIGHT_GRAY, getWidth(), getHeight(), Color.WHITE);
+//        g2.setPaint(gradient);
+//        g2.fillRect(0, 0, getWidth(), getHeight());
+//        
         // 변환 적용 후 이미지 그리기
         g2.setTransform(transform);
         if (backgroundImage != null) {
             g2.drawImage(backgroundImage, 0, 0, this);
         }
         
-        // 학교 영역을 파란색으로 칠하기
-        g2.setColor(new Color(173, 216, 230, 150)); // 반투명한 파란색
-        int[] xPoints = {30, 40, 400, 470, 480, 700, 880, 870, 410, 150}; // X 좌표
-        int[] yPoints = {80, 300, 250, 500, 690, 750, 590, 450, 150, 80}; // Y 좌표
-        g2.fillPolygon(xPoints, yPoints, xPoints.length);
+//        // 학교 영역을 파란색으로 칠하기
+//        g2.setColor(new Color(173, 216, 230, 150)); // 반투명한 파란색
+//        int[] xPoints = {30, 40, 400, 470, 480, 700, 880, 870, 410, 150}; // X 좌표
+//        int[] yPoints = {80, 300, 250, 500, 690, 750, 590, 450, 150, 80}; // Y 좌표
+//        g2.fillPolygon(xPoints, yPoints, xPoints.length);
 
         // 앤티앨리어싱 설정
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

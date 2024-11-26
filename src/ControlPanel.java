@@ -18,6 +18,10 @@ public class ControlPanel extends JPanel {
             startComboBox.addItem(node.name);
             endComboBox.addItem(node.name);
         }
+        
+        // 출발지와 도착지 선택 시 강조 표시
+        startComboBox.addActionListener(e -> updateHighlightedNodes(startComboBox, endComboBox, nodes, mapPanel));
+        endComboBox.addActionListener(e -> updateHighlightedNodes(startComboBox, endComboBox, nodes, mapPanel));
 
         bottomPanel.add(new JLabel("출발지:"));
         bottomPanel.add(startComboBox);
@@ -82,4 +86,17 @@ public class ControlPanel extends JPanel {
         add(bottomPanel, BorderLayout.SOUTH);  // 하단 버튼 및 선택 패널
         add(rightPanel, BorderLayout.EAST);    // 오른쪽 정보 패널
     }
+    
+    //선택된 노드 강조
+    private void updateHighlightedNodes(JComboBox<String> startComboBox, JComboBox<String> endComboBox, List<Node> nodes, MapPanel mapPanel) {
+        String startName = (String) startComboBox.getSelectedItem();
+        String endName = (String) endComboBox.getSelectedItem();
+        Node startNode = nodes.stream().filter(n -> n.name.equals(startName)).findFirst().orElse(null);
+        Node endNode = nodes.stream().filter(n -> n.name.equals(endName)).findFirst().orElse(null);
+        List<Node> highlightedNodes = new ArrayList<>();
+        if (startNode != null) highlightedNodes.add(startNode);
+        if (endNode != null) highlightedNodes.add(endNode);
+        mapPanel.setHighlightedNodes(highlightedNodes);
+    }
+    
 }
