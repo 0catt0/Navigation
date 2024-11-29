@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Dijkstra {
 
-    public static List<Object> findShortestPath(Node start, Node end, List<Edge> edges, List<Mudang> mudangs) {
+    public static List<PathSegment> findShortestPath(Node start, Node end, List<Edge> edges, List<Mudang> mudangs) {
         HashMap<Node, Integer> distances = new HashMap<>();
         HashMap<Node, Node> previousNodes = new HashMap<>();
         PriorityQueue<Node> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(distances::get));
@@ -50,7 +50,7 @@ public class Dijkstra {
             }
         }
 
-        List<Object> path = new ArrayList<>();
+        List<PathSegment> path = new ArrayList<>();
         Node step = end;
 
         if (!previousNodes.containsKey(end)) {
@@ -61,26 +61,23 @@ public class Dijkstra {
         while (previousNodes.containsKey(step)) {
             Node previous = previousNodes.get(step);
 
-            for (Edge edge : edges) {
-                if ((edge.getStart().equals(previous) && edge.getEnd().equals(step)) ||
-                        (edge.getEnd().equals(previous) && edge.getStart().equals(step))) {
-                    path.add(edge);
-                    break;
-                }
-            }
-
+            // 경로 구분
+            boolean isMudang = false;
             for (Mudang mudang : mudangs) {
-                if (mudang.getStart().equals(previous) && mudang.getEnd().equals(step)) {
-                    path.add(mudang);
+                if ((mudang.getStart().equals(previous) && mudang.getEnd().equals(step)) ||
+                    (mudang.getEnd().equals(previous) && mudang.getStart().equals(step))) {
+                    isMudang = true;
                     break;
                 }
             }
 
+            // PathSegment 추가
+            path.add(0, new PathSegment(previous, step, isMudang));
+
+            // 다음 노드로 이동
             step = previous;
         }
 
-        Collections.reverse(path);
         return path;
     }
-
 }
